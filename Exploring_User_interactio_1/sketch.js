@@ -7,7 +7,6 @@ let aisleShow = false;
 let healthyShow = false;
 let unhealthyShow = false;
 let endShow = false;
-
 //calculate door position (measure pixel location and found proportion compared to whole image)
 doorx = 0.44375 * window.innerWidth;
 doory = 0.5 * window.innerHeight;
@@ -26,7 +25,7 @@ buttonH = .17 * window.innerHeight;
 
 function preload(){
     front = loadImage('assets/front.png');
-    aisle = loadImage('assets/aisle.png');
+    aisle = loadImage('assets/aisle2.png');
     healthy = loadImage('assets/healthprocon.png');
     unhealthy = loadImage('assets/unhealthyprocon.png');
     end = loadImage('assets/endScreen.png');
@@ -40,20 +39,25 @@ function setup() {
     background(255);
     //start with front
     if(frontShow){
+    imageMode(CORNER);
     image(front, 0, 0, width, height);
     }
     if(aisleShow){
+      imageMode(CORNER);
       image(aisle, 0, 0, width, height);
     }
     if(healthyShow){
-      image(healthy, mouseX, mouseY, .2 * width, .2 * height);
+      imageMode(CENTER);
+      image(healthy, mouseX, mouseY, .25 * width, .25 * height);
     }
 
     if(unhealthyShow){
-      image(unhealthy, mouseX, mouseY, .2 * width, .2 * height);
+      imageMode(CENTER);
+      image(unhealthy, mouseX, mouseY, .25 * width, .25 * height);
     }
 
     if(endShow){
+      imageMode(CORNER);
       image(end, 0, 0, width, height);
     }
     
@@ -73,25 +77,39 @@ function setup() {
       frontShow = true;
   }
 }
-  function mouseMoved(){
+function mouseMoved() {
+  let cursorChanged = false;
 
-      if(aisleShow && mouseX > 0 && mouseX < shelves){
-          unhealthyShow = false;
-          healthyShow = true;
-         }
-         else{
-          healthyShow = false;
-         }
-
-        if(aisleShow &&
-          mouseX < width && width - shelves < mouseX){
-          unhealthyShow = true;
-        }
-        else{
-          unhealthyShow = false;
-        }
+  if (frontShow && mouseX > doorx && mouseX < doorx + doorw && mouseY > doory && mouseY < doory + doorh) {
+    cursor(HAND);
+    cursorChanged = true;
   }
 
-  
+  if (aisleShow && mouseX > 0 && mouseX < shelves) {
+    unhealthyShow = false;
+    healthyShow = true;
+    cursor(HAND);
+    cursorChanged = true;
+  } else {
+    healthyShow = false;
+  }
+
+  if (aisleShow && mouseX < width && width - shelves < mouseX) {
+    unhealthyShow = true;
+    cursor(HAND);
+    cursorChanged = true;
+  } else {
+    unhealthyShow = false;
+  }
+
+  if (endShow && mouseX > buttonX && mouseX < buttonX + buttonW && mouseY > buttonY && mouseY < buttonY + buttonH) {
+    cursor(HAND);
+    cursorChanged = true;
+  }
+
+  if (!cursorChanged) {
+    cursor(ARROW);
+  }
+}
 
 
